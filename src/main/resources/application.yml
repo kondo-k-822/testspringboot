@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:15432/mydatabase
+    driver-class-name: org.postgresql.Driver
+    username: myuser
+    password: mypassword
+    initialization-mode: always
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+  h2:
+    console:
+      enabled: false
+      path: /h2-console
+  mybatis:
+    mapper-locations: classpath:mapper/*.xml
+    type-aliases-package: co.jp.TestSpringBoot.model
+  logging:
+    level:
+      org:
+        springframework:
+          security=DEBUG:

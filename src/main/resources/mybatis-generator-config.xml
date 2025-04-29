@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <context id="MyBatis3" targetRuntime="MyBatis3">
+        <!-- データベース接続設定 -->
+        <jdbcConnection driverClass="org.postgresql.Driver"
+                        connectionURL="jdbc:postgresql://localhost:15432/mydatabase"
+                        userId="myuser"
+                        password="mypassword" />
+
+        <!-- Entity クラスの生成設定 -->
+        <javaModelGenerator targetPackage="co.jp.TestSpringBoot.entity"
+                            targetProject="src/main/java" />
+
+        <!-- Mapper XML ファイルの生成設定 -->
+        <sqlMapGenerator targetPackage="mapper"
+                         targetProject="src/main/resources" />
+
+        <!-- Mapper インターフェースの生成設定 -->
+        <javaClientGenerator type="XMLMAPPER"
+                             targetPackage="co.jp.TestSpringBoot.mapper"
+                             targetProject="src/main/java" />
+
+        <!-- 対象テーブルの設定 -->
+            <table tableName="USERS" domainObjectName="Users" />
+    </context>
+</generatorConfiguration>

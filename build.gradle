@@ -1,0 +1,61 @@
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath 'org.mybatis.generator:mybatis-generator-core:1.4.0'
+	}
+}
+
+plugins {
+	id 'java'
+	id 'war'
+	id 'org.springframework.boot' version '3.4.4'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'co.jp'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.4'
+	implementation 'org.postgresql:postgresql:42.6.0'
+	runtimeOnly 'org.postgresql:postgresql'
+	runtimeOnly 'com.h2database:h2' // H2データベース（テスト用）
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.4'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	implementation 'org.mybatis.generator:mybatis-generator-core:1.4.0' // 追加
+	compileOnly 'org.projectlombok:lombok:1.18.30' // 最新バージョンに更新
+	annotationProcessor 'org.projectlombok:lombok:1.18.30'
+	testCompileOnly 'org.projectlombok:lombok:1.18.30'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
+}
+
+tasks.register('generateMyBatis', JavaExec) {
+	group = 'mybatis'
+	description = 'Run MyBatis Generator'
+	classpath = configurations.runtimeClasspath // 修正
+	mainClass = 'org.mybatis.generator.api.ShellRunner'
+	args = ['-configfile', 'src/main/resources/mybatis-generator-config.xml', '-overwrite']
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
