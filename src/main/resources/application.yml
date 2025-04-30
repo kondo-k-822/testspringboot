@@ -21,3 +21,7 @@ spring:
       org:
         springframework:
           security=DEBUG:
+server:
+  servlet:
+    session:
+      timeout: 10s

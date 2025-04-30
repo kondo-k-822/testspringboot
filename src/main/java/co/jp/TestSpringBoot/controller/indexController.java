@@ -18,4 +18,13 @@ public class indexController {
         return "home"; // Refers to the 'home.html' template
     }
 
+    @GetMapping("/timeout")
+    public String timeoutPage() {
+        return "timeout"; // Return the name of the timeout HTML file (e.g., timeout.html)
+    }
+
+    @GetMapping("/anotherPage")
+    public String anotherPage() {
+        return "anotherPage"; // Returns the name of the HTML file (anotherPage.html)
+    }
 }
