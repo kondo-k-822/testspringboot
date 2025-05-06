@@ -1,36 +1,39 @@
 package co.jp.TestSpringBoot.config;
 
-import co.jp.TestSpringBoot.security.CusutomUserDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
+import org.springframework.security.web.AuthenticationEntryPoint;
+
 
 @Configuration
 public class securityconfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, CustomSessionTimeoutEntryPoint customEntryPoint) throws Exception {
+//        http
+//                .securityMatcher(new OrRequestMatcher(
+//                        new AntPathRequestMatcher("/login")
+//                ))// Apply only to login page
+//                .sessionManagement(session -> session
+//                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Do not create a session
+//                );
+
         http
-                .sessionManagement(session -> session
-                        .invalidSessionUrl("/timeout") // Redirect to timeout page on session expiration
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(customEntryPoint) // カスタムエントリーポイントを設定
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/timeout", "/css/**", "/js/**", "/h2-console/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/h2-console/**")
-                )
-                .headers(headers -> headers
-                        .frameOptions(frameOptions -> frameOptions.disable())
-                )
+                .csrf(csrf -> csrf.disable()) // Disable CSRF if necessary
                 .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/home", true)
@@ -42,6 +45,7 @@ public class securityconfig {
                         .logoutSuccessUrl("/login?logout")
                         .permitAll()
                 );
+
         return http.build();
     }
 
